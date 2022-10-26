@@ -1,0 +1,120 @@
+---
+title: "Priming the distributive/cumulative contrast"
+author: "Yizhen Jiang"
+date: '2022-07-16'
+output: 
+  html_document:
+    number_sections: yes
+    theme: cerulean
+    highlight: kate
+    toc: yes
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load R scripts
+knitr::read_chunk("demographics.R")
+knitr::read_chunk("priming task.R")
+
+# Load packages
+library(broom)        # for tidy model outputs
+library(kableExtra)   
+library(gt)           
+library(gtsummary)    # for nice tables
+library(plotly)       # for nice graphs
+```
+
+# Introduction
+
+This document is used to report the results of the data analyses ("demographics.R" and "priming task.R"). Currently, it contains most of the results reported in the essay. It's still under construction (7/16/2022).
+
+# Demographics
+
+## Data summary
+
+```{r demographics, echo=TRUE, message=TRUE, warning=TRUE}
+
+```
+
+```{r demographics summary, echo=TRUE, message=TRUE, warning=TRUE}
+demographics.summary %>% 
+  round(digits = 1) %>% 
+  kbl() %>% 
+  kable_paper("hover", full_width = F)
+```
+
+# Priming task
+
+## Data treatment & processing
+
+```{r load packages, echo=TRUE, message=TRUE, warning=TRUE}
+
+```
+
+```{r data processing, message=TRUE, warning=TRUE}
+
+```
+
+## Data summary
+
+# Average completeion time
+Average completion time is `r mean(completiontime$compeletion.time)`
+
+# Mean accuarcy rates of primes and fillers
+Mean accuracy rate of primes
+```{r}
+
+```
+Mean accuracy rates of prime trials by Condition (Distributive, Cumulative, Control)
+```{r}
+t1
+```
+Mean accuracy rate of fillers
+```{r}
+
+```
+
+Mean accuracy rates of fillers by Condition (Distributive, Cumulative, Baseline)
+```{r}
+t2
+```
+
+
+
+
+## Data visualization
+
+```{r}
+ggplotly()
+```
+
+## Data analysis
+
+```{r}
+modelsummary %>%  
+  tidy() %>% 
+  kbl() %>% 
+  kable_paper("hover", full_width = F)
+
+modelsummary %>%  
+  glance() %>% 
+  kbl() %>% 
+  kable_paper("hover", full_width = F)
+```
+
+# Session info
+
+`r R.version.string` `lme4` (v. `r packageVersion("lme4")`)
+
+```{r session info, message=FALSE}
+sessionInfo()
+```
