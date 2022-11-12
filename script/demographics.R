@@ -9,7 +9,7 @@ library("here")
 
 # Load and organize data
 
-demographics <- read.csv(here("raw data", "raw_demographics.csv"))
+demographics <- read.csv(here("raw_data", "raw_demographics.csv"))
 
 # Question.Key info (the names of Question.Key are the mutated ones)
 

@@ -32,11 +32,11 @@ library(ggtext)
 
 # Load raw data
 primingtask <- read.csv(here(
-  "raw data",
+  "raw_data",
   "raw_primingtask.csv"
 ))
 itemlist <- read.csv(here(
-  "raw data",
+  "raw_data",
   "item_list_with_expected_response_info.csv"
 ))
 
@@ -108,10 +108,10 @@ data_info <- primingtask %>%
 # Will return to the kludge later
 
 # Export data_info
-write.csv("data_info", here("processed data", "data_info.csv"))
+write.csv("data_info", here("processed_data", "data_info.csv"))
 # Load manuallyprocessed (= data_info + accuracy.twoprimes)
 manuallyprocessed <- read.csv(here(
-  "processed data",
+  "processed_data",
   "manuallyprocessed.csv"
 ))
 
