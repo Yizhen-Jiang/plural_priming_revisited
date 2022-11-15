@@ -1,6 +1,5 @@
 ## @knitr Load packages
 
-
 # Require packages
 library(here)
 
