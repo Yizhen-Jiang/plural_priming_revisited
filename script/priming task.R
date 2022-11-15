@@ -1,23 +1,23 @@
 ## @knitr Load packages
 
 # Require packages
-library(here)
+library(here) # A Simpler Way to Find Your Files
 
-library(tidyverse)
-library(Hmisc)
+library(tidyverse) # Easily Install and Load the 'Tidyverse' # Easily Install and Load the 'Tidyverse'
+library(Hmisc) # Harrell Miscellaneous
 
-library(glue)
+library(glue) # Interpreted String Literals
 
-library(gt)
-library(gtsummary)
+library(gt) # Easily Create Presentation-Ready Display Tables
+library(gtsummary) # Presentation-Ready Data Summary and Analytic Result Tables
 
-library(ggplot2)
-library(ggridges)
-library(raincloudplots)
+library(ggplot2) # Create Elegant Data Visualisations Using the Grammar of Graphics
+library(ggridges) # Ridgeline Plots in 'ggplot2' # Ridgeline Plots in 'ggplot2'
+library(raincloudplots) # The easy way to create raincloud plots # The easy way to create raincloud plots
 
-library(ggpmisc)
-library(ggpubr)
-library(ggtext)
+library(ggpmisc) # Miscellaneous Extensions to 'ggplot2'
+library(ggpubr) # 'ggplot2' Based Publication Ready Plots
+library(ggtext) # Improved Text Rendering Support for 'ggplot2'
 
 
 
@@ -445,8 +445,8 @@ removed_target %>%
 
 # Unimodality test for baseline preferences
 
-library("diptest")
-library("multimode")
+library("diptest") # Hartigan's Dip Test Statistic for Unimodality - Corrected
+library("multimode") # Mode Testing and Exploring
 
 baseline_rate <- rate %>%
   filter(Condition == "Baseline")
@@ -688,13 +688,13 @@ data_frame <- MyData %>%
 
 
 # Require packages
-library(lme4)
-library(lmerTest)
-library(car)
-library(MASS)
-library(broom.mixed)
+library(lme4) # Linear Mixed-Effects Models using 'Eigen' and S4
+library(lmerTest) # Tests in Linear Mixed Effects Models
+library(car) # Companion to Applied Regression
+library(MASS) # Support Functions and Datasets for Venables and Ripley's MASS
+library(broom.mixed) # Tidying Methods for Mixed Models
 
-library(tidyverse)
+library(tidyverse) # Easily Install and Load the 'Tidyverse' # Easily Install and Load the 'Tidyverse'
 
 
 
@@ -1355,7 +1355,7 @@ color_control <- "#C77CFF"
 ###### Ridgeline plot by Responder group (2*4 comparisons) ######
 
 # Preparation
-library(ggridges)
+library(ggridges) # Ridgeline Plots in 'ggplot2' # Ridgeline Plots in 'ggplot2'
 
 # Tibble for significance lines
 lines2x4 <- tibble(
@@ -1533,7 +1533,7 @@ ggsave(here("report", "Ridgeline plot by Responder group (2x4 comparisons).png")
 
 ###### Raincloud plot ######
 
-library(raincloudplots)
+library(raincloudplots) # The easy way to create raincloud plots # The easy way to create raincloud plots
 
 
 # Raincloud plot for Cumulative responders
@@ -4788,3 +4788,4 @@ rate_twogroups %>%
 
 # Session info:
 sessionInfo()
+
