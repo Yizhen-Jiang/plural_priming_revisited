@@ -60,7 +60,7 @@ data_info <- primingtask %>%
   filter(trial.condition != "") %>%
   # Add expected response info
   left_join(itemlist,
-            by = c("Spreadsheet.Row", "condition", "trial.condition")
+    by = c("Spreadsheet.Row", "condition", "trial.condition")
   ) %>%
   select(
     Schedule.ID, Spreadsheet.Row, Trial.Number,
@@ -71,11 +71,11 @@ data_info <- primingtask %>%
   ) %>%
   # Relabel condition levels
   mutate(condition = factor(condition,
-                            levels = c("", "D", "C", "Control"),
-                            labels = c(
-                              "Baseline", "Distributive",
-                              "Cumulative", "Control"
-                            )
+    levels = c("", "D", "C", "Control"),
+    labels = c(
+      "Baseline", "Distributive",
+      "Cumulative", "Control"
+    )
   )) %>%
   # Rename "condition" column
   rename(Condition = condition) %>%
@@ -97,17 +97,17 @@ data_info <- primingtask %>%
   mutate(distributive.target = case_when(
     trial.condition == "target" & endsWith(Response, "D.png") ~ 1,
     trial.condition == "target" & endsWith(Response, "C.png") ~ 0
-  )) 
+  ))
 
 
 # Code accuracy.twoprimes for targets in the priming block
 # = sum of accuracy.prime of the two preceding primes
 
-for(j in unique(data_info$Schedule.ID)){
-  for(i in seq(40, 181, by = 3)){ # Spreadsheet.Row of 48 targets in Block 2
-    data_info$accuracy.twoprimes[data_info$Schedule.ID==j & data_info$Spreadsheet.Row==i] =
-      data_info$accuracy.prime[data_info$Schedule.ID==j & data_info$Spreadsheet.Row==i-1] +
-      data_info$accuracy.prime[data_info$Schedule.ID==j & data_info$Spreadsheet.Row==i-2]
+for (j in unique(data_info$Schedule.ID)) {
+  for (i in seq(40, 181, by = 3)) { # Spreadsheet.Row of 48 targets in Block 2
+    data_info$accuracy.twoprimes[data_info$Schedule.ID == j & data_info$Spreadsheet.Row == i] <-
+      data_info$accuracy.prime[data_info$Schedule.ID == j & data_info$Spreadsheet.Row == i - 1] +
+      data_info$accuracy.prime[data_info$Schedule.ID == j & data_info$Spreadsheet.Row == i - 2]
   }
 }
 
@@ -119,17 +119,17 @@ processed_data <- data_info %>%
     Schedule.ID = factor(Schedule.ID),
     Spreadsheet.Row = factor(Spreadsheet.Row),
     Condition = factor(Condition,
-                       levels = c(
-                         "Baseline", "Distributive",
-                         "Cumulative", "Control"
-                       )
+      levels = c(
+        "Baseline", "Distributive",
+        "Cumulative", "Control"
+      )
     ),
     numeric.combination = factor(numeric.combination)
-  ) 
+  )
 
 
 # Export `processed_data`
-write.csv("processed_data", here("processed_data", "processed_data.csv"))
+write.csv(processed_data, here("processed_data", "processed_data.csv"))
 
 
 
@@ -235,7 +235,7 @@ processed_data %>%
 # Mean accuracy rates of primes and fillers by participant
 accuracy_rate_prime_filler <- processed_data %>%
   filter(startsWith(trial.condition, "prime") == 1 |
-           trial.condition == "filler") %>%
+    trial.condition == "filler") %>%
   mutate(accuracy.prime.filler = case_when(
     startsWith(trial.condition, "prime") == 1 ~ accuracy.prime,
     trial.condition == "filler" ~ accuracy.filler
@@ -276,13 +276,13 @@ processed_data %>%
 data <- processed_data %>%
   # Exclude 2 participants using mobile and tablet
   filter(Schedule.ID %!in%
-           primingtask$Schedule.ID[primingtask$Participant.Device.Type != "computer"]) %>%
+    primingtask$Schedule.ID[primingtask$Participant.Device.Type != "computer"]) %>%
   # Exclude 1 participant whose mean response time per trial < 1 s
   filter(Schedule.ID %!in%
-           mean_rt_per_trial$Schedule.ID[mean_rt_per_trial$mean < 1000]) %>%
+    mean_rt_per_trial$Schedule.ID[mean_rt_per_trial$mean < 1000]) %>%
   # Exclude 1 more participant whose accuracy rates of primes and fillers < 80%
   filter(Schedule.ID %!in%
-           accuracy_rate_prime_filler$Schedule.ID[accuracy_rate_prime_filler$accuracy.rate.prime.filler < 80])
+    accuracy_rate_prime_filler$Schedule.ID[accuracy_rate_prime_filler$accuracy.rate.prime.filler < 80])
 
 
 
@@ -358,7 +358,7 @@ t_accuracy_prime %>%
 mean_accuracy_filler <- data %>%
   filter(trial.condition == "filler") %>%
   mutate(Condition = factor(Condition,
-                            levels = c("Distributive", "Cumulative", "Baseline")
+    levels = c("Distributive", "Cumulative", "Baseline")
   )) %>%
   group_by(Condition) %>%
   summarise(
@@ -410,7 +410,7 @@ target_response <- data %>%
   # Exclude accuracy.twoprimes !=2 (in Distributive/Cumulative/Control conditions in Block 2)
   # Applied to Control condition for consistency
   filter(accuracy.twoprimes == 2 |
-           Condition == "Baseline")
+    Condition == "Baseline")
 
 
 # `rate`: Rate of Distributive choice (%) (distributive.rate) by subject and condition
@@ -476,11 +476,11 @@ target_response_group <- target_response %>%
   )) %>%
   # Change responder.group to factor
   mutate(responder.group = factor(responder.group,
-                                  levels = c(
-                                    "Baseline < 50%",
-                                    "Baseline = 50%",
-                                    "Baseline > 50%"
-                                  )
+    levels = c(
+      "Baseline < 50%",
+      "Baseline = 50%",
+      "Baseline > 50%"
+    )
   ))
 
 # `target_response_twogroups` = `target_response` without participants whose Baseline = 50%
@@ -501,11 +501,11 @@ rate_group <- rate %>%
   )) %>%
   # Change responder.group to factor
   mutate(responder.group = factor(responder.group,
-                                  levels = c(
-                                    "Baseline < 50%",
-                                    "Baseline = 50%",
-                                    "Baseline > 50%"
-                                  )
+    levels = c(
+      "Baseline < 50%",
+      "Baseline = 50%",
+      "Baseline > 50%"
+    )
   ))
 
 # `rate_twogroups` = `rate` without participants whose Baseline = 50%
@@ -565,9 +565,9 @@ summary_condition <- target_response %>%
     upper.CI = binconf(sum(distributive.target), length(distributive.target))[3] * 100
   ) %>%
   full_join(rate %>%
-              group_by(Condition) %>%
-              summarise(median = median(distributive.rate)),
-            by = "Condition"
+    group_by(Condition) %>%
+    summarise(median = median(distributive.rate)),
+  by = "Condition"
   )
 
 # Table `t_mean_target` for report
@@ -613,9 +613,9 @@ summary_twogroups <- target_response_twogroups %>%
     upper.CI = binconf(sum(distributive.target), length(distributive.target))[3] * 100
   ) %>%
   full_join(rate_twogroups %>%
-              group_by(responder.group, Condition) %>%
-              summarise(median = median(distributive.rate)),
-            by = c("responder.group", "Condition")
+    group_by(responder.group, Condition) %>%
+    summarise(median = median(distributive.rate)),
+  by = c("responder.group", "Condition")
   )
 
 # Table `t_mean_target_twogroups` for report
@@ -678,7 +678,7 @@ data_frame <- MyData %>%
   # Exclude accuracy.twoprimes !=2 (in Distributive/Cumulative/Control conditions in Block 2)
   # Applied to Control condition for consistency
   filter(accuracy.twoprimes == 2 |
-           Condition == "Baseline") %>%
+    Condition == "Baseline") %>%
   rename(
     Response = distributive.target,
     SUBJECT = Schedule.ID,
@@ -706,10 +706,10 @@ library(tidyverse)
 df.cumulative.1 <- data_frame %>%
   filter(responder.group == "Baseline < 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Distributive", "Cumulative",
-                              "Baseline", "Control"
-                            )
+    levels = c(
+      "Distributive", "Cumulative",
+      "Baseline", "Control"
+    )
   ))
 contrasts(df.cumulative.1$Condition)
 
@@ -784,13 +784,13 @@ contrasts(df.cumulative.1$Condition)
 # Yes!
 
 cmodel1.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.cumulative.1,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.cumulative.1,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(cmodel1.5, tol = 1e-05)
 
@@ -801,8 +801,8 @@ cDvs <- tidy(cmodel1.5)
 
 cDvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 cmodel1.5 %>%
@@ -818,10 +818,10 @@ cmodel1.5 %>%
 df.cumulative.2 <- data_frame %>%
   filter(responder.group == "Baseline < 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Baseline", "Distributive",
-                              "Cumulative", "Control"
-                            )
+    levels = c(
+      "Baseline", "Distributive",
+      "Cumulative", "Control"
+    )
   ))
 contrasts(df.cumulative.2$Condition)
 
@@ -896,13 +896,13 @@ contrasts(df.cumulative.2$Condition)
 # Yes!
 
 cmodel2.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.cumulative.2,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.cumulative.2,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(cmodel2.5, tol = 1e-05)
 
@@ -913,8 +913,8 @@ cBvs <- tidy(cmodel2.5)
 
 cBvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 cmodel2.5 %>%
@@ -930,10 +930,10 @@ cmodel2.5 %>%
 df.distributive.1 <- data_frame %>%
   filter(responder.group == "Baseline > 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Distributive", "Cumulative",
-                              "Baseline", "Control"
-                            )
+    levels = c(
+      "Distributive", "Cumulative",
+      "Baseline", "Control"
+    )
   ))
 contrasts(df.distributive.1$Condition)
 
@@ -1012,13 +1012,13 @@ contrasts(df.distributive.1$Condition)
 # Yes!
 
 dmodel1.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.distributive.1,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.distributive.1,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 
 isSingular(dmodel1.5, tol = 1e-05)
@@ -1029,8 +1029,8 @@ dDvs <- tidy(dmodel1.5)
 
 dDvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 dmodel1.5 %>%
@@ -1045,10 +1045,10 @@ dmodel1.5 %>%
 df.distributive.2 <- data_frame %>%
   filter(responder.group == "Baseline > 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Baseline", "Distributive",
-                              "Cumulative", "Control"
-                            )
+    levels = c(
+      "Baseline", "Distributive",
+      "Cumulative", "Control"
+    )
   ))
 contrasts(df.distributive.2$Condition)
 
@@ -1127,13 +1127,13 @@ contrasts(df.distributive.2$Condition)
 # Yes!
 
 dmodel2.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.distributive.2,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.distributive.2,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 
 isSingular(dmodel2.5, tol = 1e-05)
@@ -1145,8 +1145,8 @@ dBvs <- tidy(dmodel2.5)
 
 dBvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 dmodel2.5 %>%
@@ -1162,16 +1162,16 @@ pvalue8 <- c(
     pull(p.value),
   cBvs %>%
     filter(term == "ConditionDistributive" |
-             term == "ConditionCumulative" |
-             term == "ConditionControl") %>%
+      term == "ConditionCumulative" |
+      term == "ConditionControl") %>%
     pull(p.value),
   dDvs %>%
     filter(term == "ConditionCumulative") %>%
     pull(p.value),
   dBvs %>%
     filter(term == "ConditionDistributive" |
-             term == "ConditionCumulative" |
-             term == "ConditionControl") %>%
+      term == "ConditionCumulative" |
+      term == "ConditionControl") %>%
     pull(p.value)
 )
 
@@ -1186,8 +1186,8 @@ format(values8, scientific = FALSE)
 regression_c4 <- cDvs %>%
   filter(term == "ConditionCumulative") %>%
   rbind(cBvs %>% filter(term == "ConditionDistributive" |
-                          term == "ConditionCumulative" |
-                          term == "ConditionControl")) %>%
+    term == "ConditionCumulative" |
+    term == "ConditionControl")) %>%
   dplyr::select(term, estimate, std.error, statistic, p.value) %>%
   rename(
     beta = estimate,
@@ -1222,8 +1222,8 @@ regression_c4 <- cDvs %>%
 
 t_regression_c4 <- regression_c4 %>%
   mutate_at(vars(p.value, Adjusted),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   ) %>%
   mutate_at(vars(beta, S.E., Z), round, 3) %>%
   gt() %>%
@@ -1253,8 +1253,8 @@ t_regression_c4 %>%
 regression_d4 <- dDvs %>%
   filter(term == "ConditionCumulative") %>%
   rbind(dBvs %>% filter(term == "ConditionDistributive" |
-                          term == "ConditionCumulative" |
-                          term == "ConditionControl")) %>%
+    term == "ConditionCumulative" |
+    term == "ConditionControl")) %>%
   dplyr::select(term, estimate, std.error, statistic, p.value) %>%
   rename(
     beta = estimate,
@@ -1289,8 +1289,8 @@ regression_d4 <- dDvs %>%
 
 t_regression_d4 <- regression_d4 %>%
   mutate_at(vars(p.value, Adjusted),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   ) %>%
   mutate_at(vars(beta, S.E., Z), round, 3) %>%
   gt() %>%
@@ -1437,7 +1437,7 @@ rate_twogroups %>%
     color = NA # Get rid of lines
   ) +
   facet_wrap(~responder.group,
-             labeller = labeller(responder.group = responder.group.labs)
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   # Means: vertical lines
   geom_segment(
@@ -1524,8 +1524,8 @@ rate_twogroups %>%
   )
 
 ggsave(here("report", "Ridgeline plot by Responder group (2x4 comparisons).png"),
-       width = 5,
-       height = 4
+  width = 5,
+  height = 4
 )
 
 
@@ -1562,9 +1562,9 @@ df_BDBC_cumulative_p_summary <- summary_twogroups %>%
     Condition == "Cumulative" ~ 4
   )) %>%
   rbind(summary_twogroups %>%
-          filter(responder.group == "Baseline < 50%") %>%
-          filter(Condition == "Baseline") %>%
-          mutate(x_axis = 3)) %>%
+    filter(responder.group == "Baseline < 50%") %>%
+    filter(Condition == "Baseline") %>%
+    mutate(x_axis = 3)) %>%
   arrange(x_axis)
 
 
@@ -1800,9 +1800,9 @@ df_BDBC_distributive_p_summary <- summary_twogroups %>%
     Condition == "Cumulative" ~ 4
   )) %>%
   rbind(summary_twogroups %>%
-          filter(responder.group == "Baseline > 50%") %>%
-          filter(Condition == "Baseline") %>%
-          mutate(x_axis = 3)) %>%
+    filter(responder.group == "Baseline > 50%") %>%
+    filter(Condition == "Baseline") %>%
+    mutate(x_axis = 3)) %>%
   arrange(x_axis)
 
 
@@ -2013,13 +2013,13 @@ raincloud_BDBC_D
 
 # Combine raincloud plots for Cumulative and Distributive responders
 ggarrange(raincloud_BDBC_C,
-          raincloud_BDBC_D,
-          nrow = 1
+  raincloud_BDBC_D,
+  nrow = 1
 )
 
 ggsave(here("report", "Raincloud plot by Responder group.png"),
-       width = 8,
-       height = 6
+  width = 8,
+  height = 6
 )
 
 
@@ -2035,7 +2035,7 @@ summary_twogroups %>%
     y = "Distributive choice (%)"
   ) +
   facet_wrap(vars(responder.group),
-             labeller = labeller(responder.group = responder.group.labs)
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   theme(strip.text.x = element_markdown()) +
   geom_errorbar(aes(
@@ -2057,8 +2057,8 @@ summary_twogroups %>%
   )
 
 ggsave(here("report", "Bar plot by Responder group.png"),
-       width = 8,
-       height = 6
+  width = 8,
+  height = 6
 )
 
 
@@ -2074,10 +2074,10 @@ ggsave(here("report", "Bar plot by Responder group.png"),
 # Distributive vs Cumulative
 df.1 <- data_frame %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Distributive", "Cumulative",
-                              "Baseline", "Control"
-                            )
+    levels = c(
+      "Distributive", "Cumulative",
+      "Baseline", "Control"
+    )
   ))
 
 
@@ -2151,13 +2151,13 @@ df.1 <- data_frame %>%
 # Yes!
 
 gmodel1.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.1,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.1,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(gmodel1.5, tol = 1e-05)
 
@@ -2168,8 +2168,8 @@ gDvs <- tidy(gmodel1.5)
 
 gDvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 gmodel1.5 %>%
@@ -2182,10 +2182,10 @@ gmodel1.5 %>%
 
 df.2 <- data_frame %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Control", "Distributive",
-                              "Cumulative", "Baseline"
-                            )
+    levels = c(
+      "Control", "Distributive",
+      "Cumulative", "Baseline"
+    )
   ))
 contrasts(df.2$Condition)
 
@@ -2260,13 +2260,13 @@ contrasts(df.2$Condition)
 # Yes!
 
 gmodel2.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.2,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.2,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(gmodel2.5, tol = 1e-05)
 
@@ -2277,8 +2277,8 @@ gControlvs <- tidy(gmodel2.5)
 
 gControlvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 gmodel2.5 %>%
@@ -2295,7 +2295,7 @@ pvalue3 <- c(
     pull(p.value),
   gControlvs %>%
     filter(term == "ConditionDistributive" |
-             term == "ConditionCumulative") %>%
+      term == "ConditionCumulative") %>%
     pull(p.value)
 )
 
@@ -2306,7 +2306,7 @@ format(values3, scientific = FALSE)
 regression_g3 <- gDvs %>%
   filter(term == "ConditionCumulative") %>%
   rbind(gControlvs %>% filter(term == "ConditionDistributive" |
-                                term == "ConditionCumulative")) %>%
+    term == "ConditionCumulative")) %>%
   dplyr::select(term, estimate, std.error, statistic, p.value) %>%
   rename(
     beta = estimate,
@@ -2340,8 +2340,8 @@ regression_g3 <- gDvs %>%
 
 t_regression_g3 <- regression_g3 %>%
   mutate_at(vars(p.value, Adjusted),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   ) %>%
   mutate_at(vars(beta, S.E., Z), round, 3) %>%
   gt() %>%
@@ -2394,15 +2394,15 @@ rate %>%
   #   inherit.aes = FALSE
   # ) +
   # Density plot
-geom_density_ridges(
-  stat = "binline",
-  binwidth = 20,
-  scale = 0.9,
-  alpha = 0.1,
-  draw_baseline = FALSE,
-  size = 0,
-  color = NA # Get rid of lines
-) +
+  geom_density_ridges(
+    stat = "binline",
+    binwidth = 20,
+    scale = 0.9,
+    alpha = 0.1,
+    draw_baseline = FALSE,
+    size = 0,
+    color = NA # Get rid of lines
+  ) +
   facet_wrap(
     vars(all.participants),
     labeller = labeller(
@@ -2410,7 +2410,7 @@ geom_density_ridges(
     ), # Add strip title
     strip.position = "top"
   ) +
-  
+
   # Means: vertical lines
   geom_segment(
     data = summary_condition,
@@ -2539,8 +2539,8 @@ geom_density_ridges(
 # )
 
 ggsave(here("report", "Post hoc global results Ridgeline plot (3 comparisons).png"),
-       width = 4,
-       height = 4
+  width = 4,
+  height = 4
 )
 
 
@@ -2710,8 +2710,8 @@ rate_group %>% # This includes Baseline = 50%
   )
 
 ggsave(here("report", "Post hoc global results Ridgeline plot (alpha = Responder group).png"),
-       width = 4,
-       height = 4
+  width = 4,
+  height = 4
 )
 
 
@@ -2755,11 +2755,11 @@ rate_group %>%
     y = "Number of participants"
   ) +
   scale_alpha_manual("Responder group", # Change legend name
-                     values = c(
-                       `Baseline < 50%` = 0.1,
-                       `Baseline = 50%` = 0.25,
-                       `Baseline > 50%` = 0.4
-                     )
+    values = c(
+      `Baseline < 50%` = 0.1,
+      `Baseline = 50%` = 0.25,
+      `Baseline > 50%` = 0.4
+    )
   ) +
   scale_x_continuous(
     breaks = c(0, 25, 50, 75, 100),
@@ -2877,8 +2877,8 @@ rate_group %>%
 
 
 ggsave(here("report", "Post hoc global results Stacked histogram (top legend).png"),
-       width = 7,
-       height = 6
+  width = 7,
+  height = 6
 )
 
 
@@ -2907,11 +2907,11 @@ rate_group %>%
     binwidth = 20
   ) +
   scale_alpha_manual("Responder group", # Change legend name
-                     values = c(
-                       `Baseline < 50%` = 0.1,
-                       `Baseline = 50%` = 0.25,
-                       `Baseline > 50%` = 0.4
-                     )
+    values = c(
+      `Baseline < 50%` = 0.1,
+      `Baseline = 50%` = 0.25,
+      `Baseline > 50%` = 0.4
+    )
   ) +
   facet_grid(
     vars(fct_rev(Condition)), # Reverse order of factor levels so that Baseline appears at bottom
@@ -3040,8 +3040,8 @@ rate_group %>%
 
 
 ggsave(here("report", "Post hoc global results Stacked histogram (right legend).png"),
-       width = 6,
-       height = 5
+  width = 6,
+  height = 5
 )
 
 
@@ -3074,8 +3074,8 @@ df_BDBC_global_summary <- summary_condition %>%
     Condition == "Cumulative" ~ 4
   )) %>%
   rbind(summary_condition %>%
-          filter(Condition == "Baseline") %>%
-          mutate(x_axis = 3)) %>%
+    filter(Condition == "Baseline") %>%
+    mutate(x_axis = 3)) %>%
   arrange(x_axis)
 
 
@@ -3227,8 +3227,8 @@ raincloud_BDBC_global <- raincloud_2x2_repmes(
 raincloud_BDBC_global
 
 ggsave(here("report", "Raincloud plot for global results.png"),
-       width = 5,
-       height = 6
+  width = 5,
+  height = 6
 )
 
 
@@ -3293,10 +3293,10 @@ height = 6
 df.cumulative.3 <- data_frame %>%
   filter(responder.group == "Baseline < 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Cumulative", "Distributive",
-                              "Baseline", "Control"
-                            )
+    levels = c(
+      "Cumulative", "Distributive",
+      "Baseline", "Control"
+    )
   ))
 contrasts(df.cumulative.3$Condition)
 
@@ -3371,13 +3371,13 @@ contrasts(df.cumulative.3$Condition)
 # Yes!
 
 cmodel3.5 <- glmer(Response ~ Condition +
-                     (1 | SUBJECT) + (1 | ITEM),
-                   family = binomial(link = logit),
-                   data = df.cumulative.3,
-                   control = glmerControl(
-                     optimizer = "bobyqa",
-                     optCtrl = list(maxfun = 100000)
-                   )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.cumulative.3,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(cmodel3.5, tol = 1e-05)
 
@@ -3388,8 +3388,8 @@ cCvs <- tidy(cmodel3.5)
 
 cCvs %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 cmodel3.5 %>%
@@ -3408,8 +3408,8 @@ pvalue10 <- c(
     pull(p.value),
   cBvs %>%
     filter(term == "ConditionDistributive" |
-             term == "ConditionCumulative" |
-             term == "ConditionControl") %>%
+      term == "ConditionCumulative" |
+      term == "ConditionControl") %>%
     pull(p.value),
   cCvs %>%
     filter(term == "ConditionControl") %>%
@@ -3419,8 +3419,8 @@ pvalue10 <- c(
     pull(p.value),
   dBvs %>%
     filter(term == "ConditionDistributive" |
-             term == "ConditionCumulative" |
-             term == "ConditionControl") %>%
+      term == "ConditionCumulative" |
+      term == "ConditionControl") %>%
     pull(p.value),
   dDvs %>%
     filter(term == "ConditionControl") %>%
@@ -3441,8 +3441,8 @@ format(values10, scientific = FALSE)
 regression_c5 <- cDvs %>%
   filter(term == "ConditionCumulative") %>%
   rbind(cBvs %>% filter(term == "ConditionDistributive" |
-                          term == "ConditionCumulative" |
-                          term == "ConditionControl")) %>%
+    term == "ConditionCumulative" |
+    term == "ConditionControl")) %>%
   rbind(cCvs %>% filter(term == "ConditionControl")) %>%
   dplyr::select(term, estimate, std.error, statistic, p.value) %>%
   rename(
@@ -3479,8 +3479,8 @@ regression_c5 <- cDvs %>%
 
 t_regression_c5 <- regression_c5 %>%
   mutate_at(vars(p.value, Adjusted),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   ) %>%
   mutate_at(vars(beta, S.E., Z), round, 3) %>%
   gt() %>%
@@ -3507,8 +3507,8 @@ t_regression_c5 %>%
 regression_d5 <- dDvs %>%
   filter(term == "ConditionCumulative") %>%
   rbind(dBvs %>% filter(term == "ConditionDistributive" |
-                          term == "ConditionCumulative" |
-                          term == "ConditionControl")) %>%
+    term == "ConditionCumulative" |
+    term == "ConditionControl")) %>%
   rbind(dDvs %>% filter(term == "ConditionControl")) %>%
   dplyr::select(term, estimate, std.error, statistic, p.value) %>%
   rename(
@@ -3546,8 +3546,8 @@ regression_d5 <- dDvs %>%
 
 t_regression_d5 <- regression_d5 %>%
   mutate_at(vars(p.value, Adjusted),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   ) %>%
   mutate_at(vars(beta, S.E., Z), round, 3) %>%
   gt() %>%
@@ -3670,7 +3670,7 @@ rate_twogroups %>%
     color = NA # Get rid of lines
   ) +
   facet_wrap(~responder.group,
-             labeller = labeller(responder.group = responder.group.labs)
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   # Means: vertical lines
   geom_segment(
@@ -3757,8 +3757,8 @@ rate_twogroups %>%
   )
 
 ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons).png"),
-       width = 6,
-       height = 4
+  width = 6,
+  height = 4
 )
 
 
@@ -3785,13 +3785,13 @@ rate_twogroups %>%
     color = NA # Get rid of lines
   ) +
   scale_alpha_manual("Responder group", # Change legend name
-                     values = c(
-                       `Baseline < 50%` = 0.1,
-                       `Baseline > 50%` = 0.4
-                     )
+    values = c(
+      `Baseline < 50%` = 0.1,
+      `Baseline > 50%` = 0.4
+    )
   ) +
   facet_wrap(~responder.group,
-             labeller = labeller(responder.group = responder.group.labs)
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   # Means: vertical lines
   geom_segment(
@@ -3878,8 +3878,8 @@ rate_twogroups %>%
   )
 
 ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, alpha = Responder group, ncol = 2).png"),
-       width = 6,
-       height = 4
+  width = 6,
+  height = 4
 )
 
 
@@ -3905,15 +3905,15 @@ rate_twogroups %>%
     color = NA # Get rid of lines
   ) +
   scale_alpha_manual("Responder group", # Change legend name
-                     values = c(
-                       `Baseline < 50%` = 0.1,
-                       `Baseline > 50%` = 0.4
-                     )
+    values = c(
+      `Baseline < 50%` = 0.1,
+      `Baseline > 50%` = 0.4
+    )
   ) +
   facet_wrap(~responder.group,
-             ncol = 1,
-             # strip.position = "left",
-             labeller = labeller(responder.group = responder.group.labs)
+    ncol = 1,
+    # strip.position = "left",
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   # Means: vertical lines
   geom_segment(
@@ -4003,8 +4003,8 @@ rate_twogroups %>%
   )
 
 ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, alpha = Responder group, ncol = 1).png"),
-       width = 5,
-       height = 8
+  width = 5,
+  height = 8
 )
 
 
@@ -4028,9 +4028,9 @@ rate_twogroups %>%
     color = NA # Get rid of lines
   ) +
   facet_wrap(~responder.group,
-             ncol = 1,
-             # strip.position = "left",
-             labeller = labeller(responder.group = responder.group.labs)
+    ncol = 1,
+    # strip.position = "left",
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   # Means: vertical lines
   geom_segment(
@@ -4120,8 +4120,8 @@ rate_twogroups %>%
   )
 
 ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, ncol = 1).png"),
-       width = 5,
-       height = 8
+  width = 5,
+  height = 8
 )
 
 
@@ -4149,7 +4149,7 @@ rate_group %>%
     .keep = "unused"
   ) %>%
   mutate(Condition = factor(Condition,
-                            levels = c("Distributive", "Cumulative")
+    levels = c("Distributive", "Cumulative")
   )) %>%
   ggplot(aes(
     x = Baseline, y = relative.to.Baseline.priming,
@@ -4191,9 +4191,9 @@ rate_group %>%
   stat_poly_eq(aes(
     label =
       paste(after_stat(eq.label), "*\" with \"*",
-            after_stat(rr.label), "*\", \"*",
-            after_stat(p.value.label), "*\".\"",
-            sep = ""
+        after_stat(rr.label), "*\", \"*",
+        after_stat(p.value.label), "*\".\"",
+        sep = ""
       )
   ),
   formula = y ~ x,
@@ -4241,11 +4241,11 @@ summary_condition_combination <- MyData %>%
     upper.CI = binconf(sum(distributive.target), length(distributive.target))[3] * 100
   ) %>%
   rbind(summary_twogroups %>%
-          filter(Condition == "Baseline") %>%
-          mutate(numeric.combination = "Different")) %>%
+    filter(Condition == "Baseline") %>%
+    mutate(numeric.combination = "Different")) %>%
   rbind(summary_twogroups %>%
-          filter(Condition == "Baseline") %>%
-          mutate(numeric.combination = "Equal"))
+    filter(Condition == "Baseline") %>%
+    mutate(numeric.combination = "Equal"))
 
 # Bar plot by Condition and Numeric combination
 summary_condition_combination %>%
@@ -4307,27 +4307,27 @@ data_frame_numeric <- MyData %>%
   # Applied to Control condition for consistency
   filter(accuracy.twoprimes == 2) %>%
   rbind(MyData %>%
-          dplyr::select(
-            Schedule.ID, Spreadsheet.Row,
-            Condition, trial.condition,
-            distributive.target, accuracy.twoprimes,
-            responder.group
-          ) %>%
-          filter(trial.condition == "target") %>%
-          filter(responder.group != "Baseline = 50%") %>%
-          filter(Condition == "Baseline") %>%
-          mutate(numeric.combination = "Different")) %>%
+    dplyr::select(
+      Schedule.ID, Spreadsheet.Row,
+      Condition, trial.condition,
+      distributive.target, accuracy.twoprimes,
+      responder.group
+    ) %>%
+    filter(trial.condition == "target") %>%
+    filter(responder.group != "Baseline = 50%") %>%
+    filter(Condition == "Baseline") %>%
+    mutate(numeric.combination = "Different")) %>%
   rbind(MyData %>%
-          dplyr::select(
-            Schedule.ID, Spreadsheet.Row,
-            Condition, trial.condition,
-            distributive.target, accuracy.twoprimes,
-            responder.group
-          ) %>%
-          filter(trial.condition == "target") %>%
-          filter(responder.group != "Baseline = 50%") %>%
-          filter(Condition == "Baseline") %>%
-          mutate(numeric.combination = "Equal")) %>%
+    dplyr::select(
+      Schedule.ID, Spreadsheet.Row,
+      Condition, trial.condition,
+      distributive.target, accuracy.twoprimes,
+      responder.group
+    ) %>%
+    filter(trial.condition == "target") %>%
+    filter(responder.group != "Baseline = 50%") %>%
+    filter(Condition == "Baseline") %>%
+    mutate(numeric.combination = "Equal")) %>%
   rename(
     Response = distributive.target,
     SUBJECT = Schedule.ID,
@@ -4345,10 +4345,10 @@ data_frame_numeric <- MyData %>%
 df.cumulative.numeric <- data_frame_numeric %>%
   filter(responder.group == "Baseline < 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Baseline", "Distributive",
-                              "Cumulative", "Control"
-                            )
+    levels = c(
+      "Baseline", "Distributive",
+      "Cumulative", "Control"
+    )
   ))
 contrasts(df.cumulative.numeric$Condition)
 
@@ -4358,13 +4358,13 @@ contrasts(df.cumulative.numeric$Condition)
 # Yes!
 
 cmodel1.5numeric <- glmer(Response ~ numeric.combination * Condition +
-                            (1 | SUBJECT) + (1 | ITEM),
-                          family = binomial(link = logit),
-                          data = df.cumulative.numeric,
-                          control = glmerControl(
-                            optimizer = "bobyqa",
-                            optCtrl = list(maxfun = 100000)
-                          )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.cumulative.numeric,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(cmodel1.5numeric, tol = 1e-05)
 
@@ -4375,8 +4375,8 @@ cBvsnumeric <- tidy(cmodel1.5numeric)
 
 cBvsnumeric %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 cmodel1.5numeric %>%
@@ -4405,10 +4405,10 @@ cmodel1.5numeric %>%
 df.distributive.numeric <- data_frame_numeric %>%
   filter(responder.group == "Baseline > 50%") %>%
   mutate(Condition = factor(Condition,
-                            levels = c(
-                              "Baseline", "Distributive",
-                              "Cumulative", "Control"
-                            )
+    levels = c(
+      "Baseline", "Distributive",
+      "Cumulative", "Control"
+    )
   ))
 contrasts(df.distributive.numeric$Condition)
 
@@ -4418,13 +4418,13 @@ contrasts(df.distributive.numeric$Condition)
 # Yes!
 
 dmodel1.5numeric <- glmer(Response ~ numeric.combination * Condition +
-                            (1 | SUBJECT) + (1 | ITEM),
-                          family = binomial(link = logit),
-                          data = df.distributive.numeric,
-                          control = glmerControl(
-                            optimizer = "bobyqa",
-                            optCtrl = list(maxfun = 100000)
-                          )
+  (1 | SUBJECT) + (1 | ITEM),
+family = binomial(link = logit),
+data = df.distributive.numeric,
+control = glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 100000)
+)
 )
 isSingular(dmodel1.5numeric, tol = 1e-05)
 
@@ -4435,8 +4435,8 @@ dBvsnumeric <- tidy(dmodel1.5numeric)
 
 dBvsnumeric %>%
   mutate_at(vars(p.value),
-            format.pval,
-            eps = .001, digits = 3
+    format.pval,
+    eps = .001, digits = 3
   )
 
 dmodel1.5numeric %>%
@@ -4476,7 +4476,7 @@ MyData %>%
   ) %>%
   ggplot(aes(
     y = distributive.target,
-    x = Trial.Number,
+    x = as.numeric(Trial.Number),
     group = Schedule.ID, color = Schedule.ID
   )) +
   geom_line() +
@@ -4541,8 +4541,8 @@ rate %>%
   ggplot(aes(x = distributive.rate, fill = Condition)) +
   geom_histogram(bins = 5) +
   facet_wrap(vars(Condition),
-             ncol = 1,
-             strip.position = "right"
+    ncol = 1,
+    strip.position = "right"
   ) +
   labs(
     x = "Distributive choice (%)",
@@ -4610,7 +4610,7 @@ rate_twogroups %>%
   )) +
   geom_histogram(bins = 5) +
   facet_grid(Condition ~ responder.group,
-             labeller = labeller(responder.group = responder.group.labs)
+    labeller = labeller(responder.group = responder.group.labs)
   ) +
   labs(
     x = "Distributive choice (%)",
@@ -4691,10 +4691,10 @@ rate %>%
 # N = 67 (71 - 4)
 rate_twogroups %>%
   mutate(responder.group = factor(responder.group,
-                                  levels = c(
-                                    "Baseline > 50%",
-                                    "Baseline < 50%"
-                                  )
+    levels = c(
+      "Baseline > 50%",
+      "Baseline < 50%"
+    )
   )) %>%
   # Basic plot
   ggplot(aes(
