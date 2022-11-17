@@ -3648,7 +3648,7 @@ stars2x5 <- tibble(
   ),
   y = c(
     3, 2, 2.5, 3, 4,
-    3, 2, 2.5, 3, 3
+    3, 2, 2.5, 3, 3.5
   ),
   label = c(Adjusted.symbol_c5, Adjusted.symbol_d5)
 )
