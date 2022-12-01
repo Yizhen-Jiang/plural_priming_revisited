@@ -2375,7 +2375,7 @@ Adjusted.symbol_g <- regression_g3 %>%
   pull(Adjusted.symbol)
 
 
-###### Ridgeline plot ######
+###### Ridgeline plot for global results ######
 rate %>%
   mutate(all.participants = "All participants") %>%
   # Basic plot
@@ -2538,7 +2538,7 @@ rate %>%
 #   plot.subtitle = element_markdown(hjust = 0.5)
 # )
 
-ggsave(here("report", "Post hoc global results Ridgeline plot (3 comparisons).png"),
+ggsave(here("report", "Ridgeline plot for gobal results (3 comparisons).png"),
   width = 4,
   height = 4
 )
@@ -3653,7 +3653,8 @@ stars2x5 <- tibble(
   label = c(Adjusted.symbol_c5, Adjusted.symbol_d5)
 )
 
-# Ridgeline plot by Condition
+
+###### Ridgeline plot by Responder group (2*5 comparisons, ncol = 2) ######
 rate_twogroups %>%
   # Basic plot
   ggplot(aes(
@@ -3756,7 +3757,119 @@ rate_twogroups %>%
     strip.text.x = element_markdown()
   )
 
-ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons).png"),
+ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, ncol = 2).png"),
+  width = 6,
+  height = 4
+)
+
+
+
+
+###### Ridgeline plot by Responder group (2*5 comparisons, ncol = 2, no Condition labels) ######
+rate_twogroups %>%
+  # Basic plot
+  ggplot(aes(
+    x = distributive.rate, y = Condition,
+    fill = Condition, color = Condition
+  )) +
+  geom_density_ridges(
+    stat = "binline",
+    binwidth = 20,
+    scale = 0.9,
+    alpha = 0.1,
+    draw_baseline = FALSE,
+    size = 0,
+    color = NA # Get rid of lines
+  ) +
+  facet_wrap(~responder.group,
+    labeller = labeller(responder.group = responder.group.labs)
+  ) +
+  # Means: vertical lines
+  geom_segment(
+    data = summary_twogroups,
+    aes(
+      x = mean,
+      xend = mean,
+      y = as.numeric(as.factor(Condition)) + 0.075,
+      yend = as.numeric(as.factor(Condition)) - 0.075,
+      color = Condition
+    ),
+    size = 0.5
+  ) +
+  # Means: numerical values
+  geom_text(
+    data = summary_twogroups,
+    aes(
+      x = mean,
+      y = as.numeric(as.factor(Condition)) + 0.2,
+      color = Condition,
+      label = round(mean, digits = 1)
+    ),
+    size = 3
+  ) +
+  # Medians: crosses
+  geom_point(
+    data = summary_twogroups,
+    aes(
+      x = median,
+      y = Condition,
+      color = Condition
+    ),
+    size = 1,
+    shape = 4
+  ) +
+  # 95%CIs
+  geom_errorbar(
+    data = summary_twogroups,
+    aes(
+      xmin = lower.CI, xmax = upper.CI,
+      y = Condition,
+      color = Condition
+    ),
+    inherit.aes = FALSE,
+    size = 0.25,
+    width = 0.08,
+  ) +
+  # Add significance lines
+  geom_segment(
+    data = lines2x5,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    size = 0.075,
+    inherit.aes = FALSE
+  ) +
+  # Add significance stars
+  geom_text(
+    data = stars2x5,
+    aes(x = x, y = y, label = label),
+    angle = -90,
+    size = 3,
+    inherit.aes = FALSE
+  ) +
+  # x axis
+  scale_x_continuous(
+    breaks = seq(from = 0, to = 100, by = 25),
+    limits = c(-17.5, 150),
+    expand = expansion(add = c(0, 5)),
+    name = "Distributive choice (%)"
+  ) +
+  # y axis
+  scale_y_discrete(
+    expand = expansion(add = c(0.1, 1)), # This moves the space below histograms
+    name = "Condition"
+  ) +
+  # Theme
+  theme_classic() +
+  theme(
+    legend.position = "none", # Remove legend
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    axis.line.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(), # This removes Condition labels
+    strip.text.x = element_markdown(),
+  )
+
+ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, ncol = 2, no Condition labels).png"),
   width = 6,
   height = 4
 )
@@ -4786,6 +4899,273 @@ rate_twogroups %>%
 
 
 
+
+###### Ridgeline plots used in the AC proceeding paper (larger font size) ######
+
+###### Ridgeline plot for global results (3 comparisons, larger font size) ######
+rate %>%
+  mutate(all.participants = "All participants") %>%
+  # Basic plot
+  ggplot(aes(
+    x = distributive.rate, y = Condition,
+    fill = Condition, color = Condition
+  )) +
+  geom_density_ridges(
+    stat = "binline",
+    binwidth = 20,
+    scale = 0.9,
+    alpha = 0.1,
+    draw_baseline = FALSE,
+    size = 0,
+    color = NA # Get rid of lines
+  ) +
+  facet_wrap(
+    vars(all.participants),
+    labeller = labeller(
+      all.participants = c(`All participants` = glue("All participants<br>N = {total_n}"))
+    ), # Add strip title
+    strip.position = "top"
+  ) +
+  # Means: vertical lines
+  geom_segment(
+    data = summary_condition,
+    aes(
+      x = mean,
+      xend = mean,
+      y = as.numeric(as.factor(Condition)) + 0.075,
+      yend = as.numeric(as.factor(Condition)) - 0.075,
+      color = Condition
+    ),
+    size = 0.5
+  ) +
+  # Means: numerical values
+  geom_text(
+    data = summary_condition,
+    aes(
+      x = mean,
+      y = as.numeric(as.factor(Condition)) + 0.2,
+      color = Condition,
+      label = round(mean, digits = 1)
+    ),
+    size = 4
+  ) +
+  # Medians: crosses
+  geom_point(
+    data = summary_condition,
+    aes(
+      x = median,
+      y = Condition,
+      color = Condition
+    ),
+    size = 1,
+    shape = 4
+  ) +
+  # 95%CIs
+  geom_errorbar(
+    data = summary_condition,
+    aes(
+      xmin = lower.CI, xmax = upper.CI,
+      y = Condition,
+      color = Condition
+    ),
+    inherit.aes = FALSE,
+    size = 0.25, width = 0.08,
+  ) +
+  # Add significance lines and stars
+  # Distributive vs Cumulative
+  # line
+  geom_segment(
+    x = 115, xend = 115,
+    y = 3 - 0.4, yend = 3 + 0.4,
+    size = 0.075,
+    inherit.aes = FALSE
+  ) +
+  # star
+  geom_text(
+    x = 116, y = 3,
+    label = Adjusted.symbol_g[1],
+    angle = -90,
+    size = 4,
+    inherit.aes = FALSE
+  ) +
+  # Distributive vs Control
+  # line
+  geom_segment(
+    x = 125, xend = 125,
+    y = 3 - 0.4, yend = 4 + 0.4,
+    size = 0.075,
+    inherit.aes = FALSE
+  ) +
+  # star
+  geom_text(
+    x = 128, y = 3.5,
+    label = Adjusted.symbol_g[2],
+    angle = -90,
+    size = 4,
+    inherit.aes = FALSE
+  ) +
+  # Cumulative vs Control
+  # line
+  geom_segment(
+    x = 115, xend = 115,
+    y = 4 - 0.4, yend = 4 + 0.4,
+    size = 0.075,
+    inherit.aes = FALSE
+  ) +
+  # star
+  geom_text(
+    x = 118, y = 4,
+    label = Adjusted.symbol_g[3],
+    angle = -90,
+    size = 4,
+    inherit.aes = FALSE
+  ) +
+  # x axis
+  scale_x_continuous(
+    breaks = seq(from = 0, to = 100, by = 25),
+    limits = c(-17.5, 130),
+    expand = expansion(add = c(0, 5)),
+    name = "Distributive choice (%)"
+  ) +
+  # y axis
+  scale_y_discrete(
+    expand = expansion(add = c(0.1, 1)), # This moves the space below histograms
+    name = "Condition"
+  ) +
+  # Theme
+  theme_classic() +
+  theme(
+    legend.position = "none", # Remove legend
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    axis.line.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_markdown(size = 16),
+    strip.text.x.top = element_markdown(size = 16),
+    axis.text.x = element_markdown(size = 12),
+    axis.title.x = element_markdown(size = 14)
+  )
+
+ggsave(here("report", "Ridgeline plot for global results (3 comparisons, larger font size).png"),
+  width = 4,
+  height = 4
+)
+
+
+
+###### Ridgeline plot by Responder group (2*5 comparisons, ncol = 2, no Condition labels, larger font size) ######
+rate_twogroups %>%
+  # Basic plot
+  ggplot(aes(
+    x = distributive.rate, y = Condition,
+    fill = Condition, color = Condition
+  )) +
+  geom_density_ridges(
+    stat = "binline",
+    binwidth = 20,
+    scale = 0.9,
+    alpha = 0.1,
+    draw_baseline = FALSE,
+    size = 0,
+    color = NA # Get rid of lines
+  ) +
+  facet_wrap(~responder.group,
+    labeller = labeller(responder.group = responder.group.labs)
+  ) +
+  # Means: vertical lines
+  geom_segment(
+    data = summary_twogroups,
+    aes(
+      x = mean,
+      xend = mean,
+      y = as.numeric(as.factor(Condition)) + 0.075,
+      yend = as.numeric(as.factor(Condition)) - 0.075,
+      color = Condition
+    ),
+    size = 0.5
+  ) +
+  # Means: numerical values
+  geom_text(
+    data = summary_twogroups,
+    aes(
+      x = mean,
+      y = as.numeric(as.factor(Condition)) + 0.2,
+      color = Condition,
+      label = round(mean, digits = 1)
+    ),
+    size = 4
+  ) +
+  # Medians: crosses
+  geom_point(
+    data = summary_twogroups,
+    aes(
+      x = median,
+      y = Condition,
+      color = Condition
+    ),
+    size = 1,
+    shape = 4
+  ) +
+  # 95%CIs
+  geom_errorbar(
+    data = summary_twogroups,
+    aes(
+      xmin = lower.CI, xmax = upper.CI,
+      y = Condition,
+      color = Condition
+    ),
+    inherit.aes = FALSE,
+    size = 0.25,
+    width = 0.08,
+  ) +
+  # Add significance lines
+  geom_segment(
+    data = lines2x5,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    size = 0.075,
+    inherit.aes = FALSE
+  ) +
+  # Add significance stars
+  geom_text(
+    data = stars2x5,
+    aes(x = x, y = y, label = label),
+    angle = -90,
+    size = 4,
+    inherit.aes = FALSE
+  ) +
+  # x axis
+  scale_x_continuous(
+    breaks = seq(from = 0, to = 100, by = 25),
+    limits = c(-17.5, 150),
+    expand = expansion(add = c(0, 5)),
+    name = "Distributive choice (%)",
+  ) +
+  # y axis
+  scale_y_discrete(
+    expand = expansion(add = c(0.1, 1)), # This moves the space below histograms
+    name = "Condition"
+  ) +
+  # Theme
+  theme_classic() +
+  theme(
+    legend.position = "none", # Remove legend
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    axis.line.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(), # This removes Condition labels
+    strip.text.x = element_markdown(size = 16),
+    axis.text.x = element_markdown(size = 12),
+    axis.title.x = element_markdown(size = 14)
+  )
+
+ggsave(here("report", "Ridgeline plot by Responder group (2x5 comparisons, ncol = 2, no Condition labels, larger font size).png"),
+  width = 6,
+  height = 4
+)
+
+
+
+
 # Session info:
 sessionInfo()
-
